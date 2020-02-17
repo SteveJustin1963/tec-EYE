@@ -49,6 +49,10 @@ https://www.homofaciens.de/technics-base-circuits-computer-mouse_en.htm
 
 https://blog.kitware.com/diy-microscopy-optical-mouse-lens-ipad/
 
+https://link.springer.com/chapter/10.1007/978-3-540-89393-6_9
+
+https://en.wikipedia.org/wiki/Odometry
+
 
 
 
