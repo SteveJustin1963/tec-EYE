@@ -8,7 +8,7 @@ TEC-1 ADNS2610 eye
 
 
 
-* bitbang sserial stream to buffer
+* bitbang serial to buffer
 * compress value range to 1 byte, 255. 
 * recognition
    * edge
