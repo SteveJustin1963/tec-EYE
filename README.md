@@ -10,10 +10,10 @@ TEC-1 ADNS2610 eye
 
 * bitbang sserial stream to buffer
 * compress value range to 1 byte, 255. 
-* run algorithms
-  * image recognition
-     * edge
-  * ca-tank-nn 
+* recognition
+   * edge
+   * object
+   * ca-tank-nn 
 * o/p
   * move robot arm
   * 
