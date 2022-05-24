@@ -21,9 +21,9 @@ void ADNS2620::begin()
 //Essentially resets communication to the ADNS2620 module
 void ADNS2620::sync()
 {
-;  sets the SCL pin high, delays for 1 millisecond, sets the SCL pin low, 
-; delays for 1 millisecond, and then sets the SCL pin high again. 
-; delay 100ms
+	//  sets the SCL pin high, delays for 1 millisecond, sets the SCL pin low, 
+	// delays for 1 millisecond, and then sets the SCL pin high again. 
+	// delay 100ms
 
     digitalWrite(_scl, HIGH);
     delay(1);
@@ -35,20 +35,29 @@ void ADNS2620::sync()
 
 //Reads a register from the ADNS2620 sensor. Returns the result to the calling function.
 //Example: value = mouse.read(CONFIGURATION_REG);
+
 char ADNS2620::read(char address)
 {
-    char value=0;
+	// sets the pin mode for the SDA line to output and the clock line to input. 
+	// It also sets the clock line high. The address is then ANDed with 0x7F to ensure the highest bit is set to '0' to indicate a read.
+	
+	char value=0;
 	pinMode(_sda, OUTPUT); //Make sure the SDIO pin is set as an output.
     digitalWrite(_scl, HIGH); //Make sure the clock is high.
     address &= 0x7F;    //Make sure the highest bit of the address byte is '0' to indicate a read.
  
     //Send the Address to the ADNS2620
+    	// sets the clock line to low and then sets the data line to output. 
+	// This is done to prepare for sending data.
+    
     for(int address_bit=7; address_bit >=0; address_bit--){
         digitalWrite(_scl, LOW);  //Lower the clock
         pinMode(_sda, OUTPUT); //Make sure the SDIO pin is set as an output.
         
-        //If the current bit is a 1, set the SDIO pin. If not, clear the SDIO pin
-        if(address & (1<<address_bit)){
+        // If the current bit is a 1, set the SDIO pin. If not, clear the SDIO pin
+        // sets the SDA line to the value of the bit being sent (either HIGH or LOW), then pulses the SCL line to send the bit.
+	
+	if(address & (1<<address_bit)){
             digitalWrite(_sda, HIGH);
         }
         else{
@@ -64,7 +73,14 @@ char ADNS2620::read(char address)
     pinMode(_sda, INPUT);	//Make sure the SDIO pin is set as an input.
 	digitalWrite(_sda, HIGH); //Enable the internal pull-up
         
-    //Send the Value byte to the ADNS2620
+    // Send the Value byte to the ADNS2620
+    	// The delayMicroseconds function takes an integer value of microseconds to delay the program by. 
+    	// used to create a pause between setting and reading the SDIO pin.
+	// The digitalWrite function takes an integer pin number and a HIGH or LOW value. 
+	// When called, it sets the pin to either 3.3V (HIGH) or 0V (LOW).
+	// The digitalRead function takes an integer pin number and returns either a HIGH or LOW value. 
+	// When called, it reads the voltage level of the specified pin.
+    
     for(int value_bit=7; value_bit >= 0; value_bit--){
         digitalWrite(_scl, LOW);  //Lower the clock
         delayMicroseconds(10); //Allow the ADNS2620 to configure the SDIO pin
@@ -79,27 +95,29 @@ char ADNS2620::read(char address)
     return value;
 }	
 
-//Writes a value to a register on the ADNS2620.
-//Example: mouse.write(CONFIGURATION_REG, 0x01);
+// Writes a value to a register on the ADNS2620.
+// Example: mouse.write(CONFIGURATION_REG, 0x01);
+
 void ADNS2620::write(char address, char value)
 {
 	pinMode(_sda, OUTPUT);	//Make sure the SDIO pin is set as an output.
     digitalWrite(_scl, HIGH);          //Make sure the clock is high.
     address |= 0x80;    //Make sure the highest bit of the address byte is '1' to indicate a write.
 
-    //Send the Address to the ADNS2620
+    // Send the Address to the ADNS2620
     for(int address_bit=7; address_bit >=0; address_bit--){
         digitalWrite(_scl, LOW); //Lower the clock
         
         delayMicroseconds(10); //Give a small delay (only needed for the first iteration to ensure that the ADNS2620 relinquishes
                     //control of SDIO if we are performing this write after a 'read' command.
         
-        //If the current bit is a 1, set the SDIO pin. If not, clear the SDIO pin
+        // If the current bit is a 1, set the SDIO pin. If not, clear the SDIO pin
 	// sets the value of the SDA pin according to the value of the "address" variable. 
 	// If the "address" variable is 1, the SDA pin is set to HIGH. If the "address" variable is 0, the SDA pin is set to LOW.
 	// The code then delays for 10 microseconds, and sets the SCL pin to HIGH. 
 	// This causes the data on the SDA pin to be clocked into the slave device.
-	// Finally, the code delays for another 10 microseconds, before setting the SCL pin back to LOW. This ensures that the data is properly latched on the slave device.
+	// Finally, the code delays for another 10 microseconds, before setting the SCL pin back to LOW. 
+	// This ensures that the data is properly latched on the slave device.
         
 	if(address & (1<<address_bit))digitalWrite(_sda, HIGH);
         else digitalWrite(_sda, LOW);
