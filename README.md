@@ -27,5 +27,5 @@ For vision perhaps we want to recognise, edges, tone, changes between pixels and
 - https://blog.kitware.com/diy-microscopy-optical-mouse-lens-ipad/
 - https://link.springer.com/chapter/10.1007/978-3-540-89393-6_9
 - https://en.wikipedia.org/wiki/Odometry
-- https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DsmxNdfO1eBw&psig=AOvVaw1gd9B_jWds6SV50MgjKuE_&ust=1587609884398000&source=images&cd=vfe&ved=0CA0QjhxqFwoTCOCiquuB--gCFQAAAAAdAAAAABBT
-
+- https://www.youtube.com/watch?v=smxNdfO1eBw
+- 
