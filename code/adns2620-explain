@@ -12,7 +12,9 @@ void ADNS2620::begin()
 //Essentially resets communication to the ADNS2620 module
 void ADNS2620::sync()
 {
-;The above code sets the SCL pin high, delays for 1 millisecond, sets the SCL pin low, delays for 1 millisecond, and then sets the SCL pin high again. This sequence is then repeated 100 times.
+;  sets the SCL pin high, delays for 1 millisecond, sets the SCL pin low, 
+; delays for 1 millisecond, and then sets the SCL pin high again. 
+; delay 100ms
 
     digitalWrite(_scl, HIGH);
     delay(1);
@@ -84,7 +86,13 @@ void ADNS2620::write(char address, char value)
                     //control of SDIO if we are performing this write after a 'read' command.
         
         //If the current bit is a 1, set the SDIO pin. If not, clear the SDIO pin
-        if(address & (1<<address_bit))digitalWrite(_sda, HIGH);
+	// sets the value of the SDA pin according to the value of the "address" variable. 
+	// If the "address" variable is 1, the SDA pin is set to HIGH. If the "address" variable is 0, the SDA pin is set to LOW.
+	// The code then delays for 10 microseconds, and sets the SCL pin to HIGH. 
+	// This causes the data on the SDA pin to be clocked into the slave device.
+	// Finally, the code delays for another 10 microseconds, before setting the SCL pin back to LOW. This ensures that the data is properly latched on the slave device.
+        
+	if(address & (1<<address_bit))digitalWrite(_sda, HIGH);
         else digitalWrite(_sda, LOW);
         delayMicroseconds(10);
         digitalWrite(_scl, HIGH);
@@ -92,6 +100,9 @@ void ADNS2620::write(char address, char value)
     }
     
     //Send the Value byte to the ADNS2620
+    // sets the clock low, then writes the value to the data line. 
+    //It then sets the clock high and delays for a short time.
+    
     for(int value_bit=7; value_bit >= 0; value_bit--){
         digitalWrite(_scl, LOW);  //Lower the clock
         //If the current bit is a 1, set the SDIO pin. If not, clear the SDIO pin
