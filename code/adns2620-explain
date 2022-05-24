@@ -1,3 +1,12 @@
+/* Arduino ADNS2620 Library
+ * Can be used to interface between an ATmega328 (Arduino) and the ADNS2620 Mouse Sensor
+ * Copyright 2010 SparkFun ElectronicS
+ * Written by Ryan Owens
+*/
+
+#include <avr/pgmspace.h>
+#include "adns2620.h"
+#include "WProgram.h"
 
 //Constructor sets the pins used for the mock 'i2c' communication
 
