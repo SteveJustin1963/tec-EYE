@@ -12,7 +12,10 @@ The idea is the capture the serial steam and send it to buffer for analysis. The
 
 See this diagram ![](https://github.com/SteveJustin1963/tec-EYE/blob/master/pics/CCD.jpg)
 
-For vision perhaps we want to recognise, edges, tone, changes between pixels and apply this to AI or motor control. 
+### iterate
+- For vision perhaps we want to recognise, edges, tone, changes between pixels and apply this to AI or motor control. 
+- the 2610 has some embedded DSP cct to process depth and speed. this feature has been exploited in some drone projects, investigate and apply
+
 
 
 ### Ref
