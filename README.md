@@ -6,6 +6,8 @@
 ![](https://github.com/SteveJustin1963/tec-EYE/blob/master/pics/lens1.png)
 ![](https://github.com/SteveJustin1963/tec-EYE/blob/master/pics/pinout1.png)
 ![](https://github.com/SteveJustin1963/tec-EYE/blob/master/pics/CCD.jpg)
+![image](https://user-images.githubusercontent.com/58069246/212500085-2060f0c6-c37e-4ae9-bb69-3b08d08ecb71.png)
+
 
 The ADNS-2610 is an optical mouse sensor chip and it is designed to track the movement of a surface, and it can be used to capture basic images with very limited resolution and image quality compared to a typical camera. The ADNS-2610 sensor is based on optical navigation technology, which measures changes in position by optically acquiring `sequential surface images (frames)` and mathematically determining the `direction and magnitude` of movement. It is designed to track movement rather than capturing still images, it would require additional hardware and software modifications to repurpose the ADNS2610 as a camera.
 
