@@ -12,23 +12,3 @@ The idea is the capture the serial steam and send it to buffer for analysis. The
 
 See this diagram ![](https://github.com/SteveJustin1963/tec-EYE/blob/master/pics/CCD.jpg)
 
-### iterate
-- For vision perhaps we want to recognise, edges, tone, changes between pixels and apply this to AI or motor control. 
-- the 2610 has some embedded DSP cct to process depth and speed. this feature has been exploited in some drone projects, investigate and apply
-
-
-
-### Ref
--  seach for camera module in https://www.aliexpress.com, some for under $2 !
-- https://www.sparkfun.com/products/retired/10026
-- https://hackaday.com/2016/11/21/diy-optical-sensor-breakout-board-makes-diy-optical-mouse/
-- https://github.com/Tom101222/Adns-3050-Optical-Sensor
-- https://hackaday.com/2013/04/03/adding-an-optical-mouse-sensor-to-an-autonomous-vehicle/
-- https://hackaday.com/2009/06/05/ds-optical-mouse-camera/
-- http://codinglab.blogspot.com/2009/06/nintendods-uses-optical-mouse-as-camera.html
-- https://www.homofaciens.de/technics-base-circuits-computer-mouse_en.htm
-- https://blog.kitware.com/diy-microscopy-optical-mouse-lens-ipad/
-- https://link.springer.com/chapter/10.1007/978-3-540-89393-6_9
-- https://en.wikipedia.org/wiki/Odometry
-- https://www.youtube.com/watch?v=smxNdfO1eBw
-- 
