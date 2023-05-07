@@ -203,3 +203,58 @@ int read(int address) {
   return value;
 }
 ```
+## forth code
+```
+\ Define constants for SDIO and SCK pins
+: SDIO 4 ;
+: SCK 5 ;
+
+: init-serial 4800 serial-begin ;
+
+: set-pin-modes
+  SDIO OUTPUT pin-mode
+  SCK INPUT pin-mode ;
+
+: set-initial-states
+  SDIO HIGH digital-write
+  SCK LOW digital-write ;
+
+: send-address ( addr -- )
+  0x7F and
+  0 8 0 do
+    SCK LOW digital-write
+    SDIO swap i rshift 1 and digital-write
+    10 us delay
+    SCK HIGH digital-write
+    10 us delay
+  loop ;
+
+: delay-120
+  120 us delay ;
+
+: set-sdio-input
+  SDIO INPUT_PULLUP pin-mode ;
+
+: read-sensor-output ( -- n )
+  0
+  0 8 0 do
+    SCK LOW digital-write
+    10 us delay
+    SCK HIGH digital-write
+    SDIO digital-read swap i lshift or swap
+    10 us delay
+  loop ;
+
+: read ( addr -- n )
+  set-pin-modes
+  set-initial-states
+  send-address
+  delay-120
+  set-sdio-input
+  read-sensor-output
+  dup serial-write ;
+
+: read-sensor ( addr -- value )
+  init-serial
+  read ;
+```
