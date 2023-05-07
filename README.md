@@ -11,7 +11,7 @@
 - Acquire a cheap adjustable lens and mount it on the front of the sensor to improve its functionality.
 - Connect the SDA and SCK pins of the ADNS2610 sensor to the corresponding pins on the Arduino microcontroller.
 
-##Enhancing the TEC-1 with the ADNS2610 Optical Mouse Sensor Chip and Adjustable Lens
+## Enhancing the TEC-1 with the ADNS2610 Optical Mouse Sensor Chip and Adjustable Lens
 The ADNS2610 is an optical mouse sensor chip that is perfect for use with the slow TEC-1 due to its limited processing ability. It can be easily obtained by removing it from an old optical mouse. To improve its functionality, a cheap adjustable lens can be mounted on the front as the existing mouse lens is only useful for close range and not useful for capturing images. The chip's output circuit is simple as the data is sent out serially on SDIO (serial data in and out) and SCK (serial clock). This slow serial data stream can be buffered and analyzed. The sensor has an 8x8 pixel matrix, providing 64-bit frames or 8 bytes of data. The optical navigation technology, including the built-in DSP feature, can be later exploited for more complex uses.
 
 ## example Serial Data ADNS2620 to ATmega328 using SDA Line
