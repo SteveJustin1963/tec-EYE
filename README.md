@@ -220,10 +220,14 @@ int read(int address) {
   SCK LOW digital-write ;
 
 : send-address ( addr -- )
-  0x7F and
-  0 8 0 do
+  0x7F and  // most significant bit (MSB) of the address is set to 0.
+  0 8 0 do  //  loop that iterates 8 times, with the loop index ranging from 0 to 7
     SCK LOW digital-write
-    SDIO swap i rshift 1 and digital-write
+    SDIO swap i rshift 1 and digital-write  // This line sends each bit of the address one by one over the data line (SDIO). 
+                                           // The swap word exchanges the top two items on the stack, and i refers to the loop index. 
+                                           // rshift 1 and shifts the loop index one bit to the right and performs an AND operation with 1, 
+                                           // effectively extracting one bit at a time from the address. 
+                                           // The resulting bit is then sent over the data line using digital-write.
     10 us delay
     SCK HIGH digital-write
     10 us delay
