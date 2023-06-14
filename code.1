@@ -1,0 +1,25 @@
+Write a function named "read" that takes in an "address" variable.
+Declare a variable named "value" and set it to 0.
+Set the pin mode for the SDA line to OUTPUT and the clock line to INPUT.
+Set the clock line to HIGH.
+AND the "address" variable with 0x7F and store the result in "address."
+Begin a loop that iterates 8 times.
+Within the loop, set the clock line to LOW.
+Set the pin mode for the SDA line to OUTPUT.
+If the current bit of "address" is 1, set the SDA line to HIGH. If not, set it to LOW.
+Delay for 10 microseconds.
+Set the clock line to HIGH.
+Delay for 10 microseconds.
+Repeat steps 7-12 for all 8 bits of the "address" variable.
+Delay for 120 microseconds.
+Set the pin mode for the SDA line to INPUT and enable the internal pull-up.
+Begin a loop that iterates 8 times.
+Within the loop, set the clock line to LOW.
+Delay for 10 microseconds.
+Set the clock line to HIGH.
+Delay for 10 microseconds.
+If the value read from the SDA line is HIGH, OR "value" with the current bit of the loop.
+Repeat steps 16-21 for all 8 bits of the "value" variable.
+Return the "value" variable.
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\
