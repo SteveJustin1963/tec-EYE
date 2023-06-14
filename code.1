@@ -1,3 +1,5 @@
+## software
+```
 Write a function named "read" that takes in an "address" variable.
 Declare a variable named "value" and set it to 0.
 Set the pin mode for the SDA line to OUTPUT and the clock line to INPUT.
@@ -21,5 +23,204 @@ Delay for 10 microseconds.
 If the value read from the SDA line is HIGH, OR "value" with the current bit of the loop.
 Repeat steps 16-21 for all 8 bits of the "value" variable.
 Return the "value" variable.
+```
+## sudo 
+```
+// Initialize serial port with a baud rate of 4800
+Serial.begin(4800);
 
-\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+// Define function to read from sensor
+int read(int address) {
+  // Declare variable to hold sensor output
+  int value = 0;
+
+  // Set pin modes for SDIO and SCK lines
+  pinMode(SDIO, OUTPUT);
+  pinMode(SCK, INPUT);
+
+  // Set SDIO and SCK lines to initial states
+  digitalWrite(SDIO, HIGH);
+  digitalWrite(SCK, LOW);
+
+  // AND the address with 0x7F to ensure MSB is 0
+  address &= 0x7F;
+
+  // Loop through each bit of the address
+  for (int i = 0; i < 8; i++) {
+    // Set SCK line to LOW
+    digitalWrite(SCK, LOW);
+
+    // Set SDIO line to current bit of address
+    digitalWrite(SDIO, bitRead(address, i));
+
+    // Delay for 10 microseconds
+    delayMicroseconds(10);
+
+    // Set SCK line to HIGH
+    digitalWrite(SCK, HIGH);
+
+    // Delay for 10 microseconds
+    delayMicroseconds(10);
+  }
+
+  // Delay for 120 microseconds
+  delayMicroseconds(120);
+
+  // Set pin mode for SDIO line to INPUT and enable internal pull-up
+  pinMode(SDIO, INPUT_PULLUP);
+
+  // Loop through each bit of the sensor output
+  for (int i = 0; i < 8; i++) {
+    // Set SCK line to LOW
+    digitalWrite(SCK, LOW);
+
+    // Delay for 10 microseconds
+    delayMicroseconds(10);
+
+    // Set SCK line to HIGH
+    digitalWrite(SCK, HIGH);
+
+    // Read SDIO line and OR it with current bit of value
+    value |= (digitalRead(SDIO) << i);
+
+    // Delay for 10 microseconds
+    delayMicroseconds(10);
+  }
+
+  // Send sensor output over serial port
+  Serial.write(value);
+
+  // Return sensor output
+  return value;
+}
+```
+
+## C code for reading data from the ADNS2610 sensor using integer logic and bit shifting:
+```
+// Initialize serial port with a baud rate of 4800
+Serial.begin(4800);
+
+// Define function to read from sensor
+int read(int address) {
+  // Declare variable to hold sensor output
+  int value = 0;
+
+  // Set pin modes for SDIO and SCK lines
+  pinMode(SDIO, OUTPUT);
+  pinMode(SCK, INPUT);
+
+  // Set SDIO and SCK lines to initial states
+  digitalWrite(SDIO, HIGH);
+  digitalWrite(SCK, LOW);
+
+  // AND the address with 0x7F to ensure MSB is 0
+  address &= 0x7F;
+
+  // Loop through each bit of the address
+  for (int i = 0; i < 8; i++) {
+    // Set SCK line to LOW
+    digitalWrite(SCK, LOW);
+
+    // Set SDIO line to current bit of address
+    digitalWrite(SDIO, (address >> i) & 1);
+
+    // Delay for 10 microseconds
+    delayMicroseconds(10);
+
+    // Set SCK line to HIGH
+    digitalWrite(SCK, HIGH);
+
+    // Delay for 10 microseconds
+    delayMicroseconds(10);
+  }
+
+  // Delay for 120 microseconds
+  delayMicroseconds(120);
+
+  // Set pin mode for SDIO line to INPUT and enable internal pull-up
+  pinMode(SDIO, INPUT_PULLUP);
+
+  // Loop through each bit of the sensor output
+  for (int i = 0; i < 8; i++) {
+    // Set SCK line to LOW
+    digitalWrite(SCK, LOW);
+
+    // Delay for 10 microseconds
+    delayMicroseconds(10);
+
+    // Set SCK line to HIGH
+    digitalWrite(SCK, HIGH);
+
+    // Read SDIO line and OR it with current bit of value
+    value |= (digitalRead(SDIO) << i);
+
+    // Delay for 10 microseconds
+    delayMicroseconds(10);
+  }
+
+  // Send sensor output over serial port
+  Serial.write(value);
+
+  // Return sensor output
+  return value;
+}
+```
+## forth code
+```
+\ Define constants for SDIO and SCK pins
+: SDIO 4 ;
+: SCK 5 ;
+
+: init-serial 4800 serial-begin ;
+
+: set-pin-modes
+  SDIO OUTPUT pin-mode
+  SCK INPUT pin-mode ;
+
+: set-initial-states
+  SDIO HIGH digital-write
+  SCK LOW digital-write ;
+
+: send-address ( addr -- )
+  0x7F and  // most significant bit (MSB) of the address is set to 0.
+  0 8 0 do  //  loop that iterates 8 times, with the loop index ranging from 0 to 7
+    SCK LOW digital-write
+    SDIO swap i rshift 1 and digital-write  // This line sends each bit of the address one by one over the data line (SDIO). 
+                                           // The swap word exchanges the top two items on the stack, and i refers to the loop index. 
+                                           // rshift 1 and shifts the loop index one bit to the right and performs an AND operation with 1, 
+                                           // effectively extracting one bit at a time from the address. 
+                                           // The resulting bit is then sent over the data line using digital-write.
+    10 us delay
+    SCK HIGH digital-write
+    10 us delay
+  loop ;
+
+: delay-120
+  120 us delay ;
+
+: set-sdio-input
+  SDIO INPUT_PULLUP pin-mode ;
+
+: read-sensor-output ( -- n )
+  0
+  0 8 0 do
+    SCK LOW digital-write
+    10 us delay
+    SCK HIGH digital-write
+    SDIO digital-read swap i lshift or swap
+    10 us delay
+  loop ;
+
+: read ( addr -- n )
+  set-pin-modes
+  set-initial-states
+  send-address
+  delay-120
+  set-sdio-input
+  read-sensor-output
+  dup serial-write ;
+
+: read-sensor ( addr -- value )
+  init-serial
+  read ;
+```
