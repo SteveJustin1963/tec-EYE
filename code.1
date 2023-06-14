@@ -1,5 +1,4 @@
-## software
-```
+
 Write a function named "read" that takes in an "address" variable.
 Declare a variable named "value" and set it to 0.
 Set the pin mode for the SDA line to OUTPUT and the clock line to INPUT.
@@ -23,9 +22,10 @@ Delay for 10 microseconds.
 If the value read from the SDA line is HIGH, OR "value" with the current bit of the loop.
 Repeat steps 16-21 for all 8 bits of the "value" variable.
 Return the "value" variable.
-```
-## sudo 
-```
+
+
+\\\\\\\\\\\\\\\\\\\\\\\ sudo  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
+
 // Initialize serial port with a baud rate of 4800
 Serial.begin(4800);
 
@@ -93,10 +93,10 @@ int read(int address) {
   // Return sensor output
   return value;
 }
-```
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-## C code for reading data from the ADNS2610 sensor using integer logic and bit shifting:
-```
+; C code for reading data from the ADNS2610 sensor using integer logic and bit shifting:
+
 // Initialize serial port with a baud rate of 4800
 Serial.begin(4800);
 
@@ -164,9 +164,12 @@ int read(int address) {
   // Return sensor output
   return value;
 }
-```
-## forth code
-```
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+
+
+\\\\\\\\\\\\\\\\\\\\ forth \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
 \ Define constants for SDIO and SCK pins
 : SDIO 4 ;
 : SCK 5 ;
@@ -223,4 +226,4 @@ int read(int address) {
 : read-sensor ( addr -- value )
   init-serial
   read ;
-```
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
