@@ -414,3 +414,96 @@ I
 // ---------------------------------------------------------------
 ```
 
+Here’s an **ASCII flowchart** for the `tec-EYE – ADNS-2610 8×8 frame reader` logic, focusing on the **main data flow** and how the subroutines connect.
+(Indented blocks represent sub-routine calls and loops.)
+
+```
++--------------------------------------------------+
+|                   START (I)                      |
++--------------------------------------------------+
+                 |
+                 v
+        "TEC-1 ADNS-2610 eye demo"
+                 |
+                 v
+           +----------------+
+           | MAIN LOOP (1)  |
+           +----------------+
+                 |
+                 v
+        +-------------------+
+        | G: GRAB-FRAME     |
+        +-------------------+
+                 |
+                 v
+        +-----------------------------+
+        | 1. Send PIXEL-GRAB command  |
+        |    p → E (>ADNS write)      |
+        +-----------------------------+
+                 |
+                 v
+        Delay 120 µs (D)
+                 |
+                 v
+        +--------------------------------------+
+        | 2. Read 64 bytes into frame buffer f |
+        |  (Loop 64 times)                     |
+        |--------------------------------------|
+        | Each iteration:                      |
+        |   d F (ADNS> read byte)              |
+        |   f /i ?! (store in array)           |
+        |   10 D (delay)                       |
+        +--------------------------------------+
+                 |
+                 v
+        +-------------------+
+        | H: .FRAME DISPLAY |
+        +-------------------+
+                 |
+                 v
+        +--------------------------------------+
+        |  Outer Loop: 8 rows (/i counter)     |
+        |   Print newline                      |
+        |   Inner Loop: 8 columns (/j counter) |
+        |    f /i 8 * /j + ? → pixel value     |
+        |    Check pixel brightness:           |
+        |     <20 → '*'                        |
+        |     <40 → '.'                        |
+        |     else ' '                         |
+        +--------------------------------------+
+                 |
+                 v
+         Print newline, return to main loop
+                 |
+                 v
+        +-----------------------+
+        | 500 ms delay (m!)     |
+        | Check keypress (/K)   |
+        | Continue if no key (/W)|
+        +-----------------------+
+                 |
+                 v
+          +----------------+
+          | "done." /N     |
+          +----------------+
+                 |
+                 v
+                END
+```
+
+### Subroutine Overview
+
+```
+:A  → Set SDIO pin (write flag to /O)
+:B  → Read SDIO pin (input with pull-up)
+:C  → Set SCK pin (write flag to /O)
+:D  → Microsecond delay loop (n × 18 cycles)
+:E  → >ADNS : Write 8 bits MSB-first using A & C
+:F  → ADNS> : Read 8 bits MSB-first using B & C
+:G  → GRAB-FRAME : Initiate pixel grab & read 64 bytes
+:H  → .FRAME : Display 8×8 frame as ASCII
+:I  → DEMO : Run continuous capture/display until keypress
+```
+
+ 
+
