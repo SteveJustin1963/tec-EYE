@@ -263,4 +263,154 @@ That’s it – a **fully functional MINT-Octave version** of the original Forth
 
 ///////////
 
+```
+// ---------------------------------------------------------------
+// tec-EYE – ADNS-2610 8×8 frame reader in MINT-Octave
+// ---------------------------------------------------------------
+// Pins (change the numbers if your board uses different ones)
+//   SDIO  – PA0  (bidirectional)
+//   SCK   – PA1  (output only)
+// ---------------------------------------------------------------
+
+// Pin definitions (stored in variables)
+0 s !   // SDIO pin (PA0)
+1 k !   // SCK pin (PA1)
+
+// Register addresses
+#00 p !   // REG-PIXEL-GRAB
+#01 d !   // REG-PIXEL-DATA
+
+// Frame buffer (64 bytes) - using array
+[ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ] f !
+
+// ----- GPIO helper functions ------------------------------------
+// Note: MINT-Octave simulates I/O ports via files
+// These functions provide a conceptual interface
+
+// Set SDIO pin (output and drive it 0/1)
+:A   // SDIO! ( flag -- )
+  s " /O
+;
+
+// Read SDIO pin (input with pull-up)
+:B   // SDIO@ ( -- flag )
+  s /I 1 &
+;
+
+// Set SCK pin
+:C   // SCK! ( flag -- )
+  k " /O
+;
+
+// Microsecond delay (approximate - adjust multiplier as needed)
+:D   // us ( n -- )
+  18 * ( )   // empty loop body for delay
+;
+
+// ----- ADNS-2610 low-level protocol ----------------------------
+
+// Write a byte to the sensor (MSB first)
+:E   // >ADNS ( byte -- )
+  8 ( 
+    0 C     // SCK low
+    " 7 /i - } 1 & A   // shift and output bit
+    10 D    // delay
+    1 C     // SCK high
+    10 D    // delay
+  )
+  '   // drop byte
+;
+
+// Read a byte from the sensor (MSB first)
+:F   // ADNS> ( -- byte )
+  0
+  8 (
+    0 C 10 D    // SCK low, delay
+    1 C 10 D    // SCK high, delay
+    2 * B |     // shift left and OR in bit
+  )
+;
+
+// ----- High-level frame capture ---------------------------------
+
+:G   // GRAB-FRAME ( -- )
+  // 1. Initiate pixel grab
+  p E
+  120 D   // tSWR ≥ 100 µs
+  
+  // 2. Read 64 bytes
+  64 (
+    d F           // read byte from sensor
+    f /i ?!       // store in frame array at index i
+    10 D          // small delay
+  )
+;
+
+// ----- Utility: crude ASCII image -------------------------------
+
+:H   // .FRAME ( -- )
+  8 (      // rows
+    /N
+    8 (    // columns
+      f /i 8 * /j + ? "   // get pixel value, duplicate
+      20 < (
+        42 /C      // dark → * (ASCII 42)
+      ) /E (
+        " 40 < (
+          46 /C    // medium → . (ASCII 46)
+        ) /E (
+          32 /C    // bright → space (ASCII 32)
+        )
+      )
+      '   // drop pixel value
+    )
+  )
+  /N
+;
+
+// ----- Demo ----------------------------------------------------
+
+:I   // DEMO
+  // Initialize pins (conceptually - set as outputs)
+  `TEC-1 ADNS-2610 eye demo` /N
+  
+  // Main loop - grab and display frames
+  1 (
+    G          // grab frame
+    H          // display frame
+    500 m !    // 500ms delay
+    /K /z ~    // check for keypress, exit if key pressed
+    /W         // while loop continuation
+  )
+  
+  `done.` /N
+;
+
+// ---------------------------------------------------------------
+// Run the demo
+// ---------------------------------------------------------------
+I
+
+// ---------------------------------------------------------------
+// USAGE NOTES:
+// 
+// This is a conceptual conversion to MINT-Octave. Key differences:
+//
+// 1. MINT-Octave uses variables a-z for storage (not constants)
+// 2. Functions are defined with :A through :Z (uppercase letters)
+// 3. GPIO operations (/O, /I) are simulated via files in MINT-Octave
+// 4. Loops use: count ( body ) syntax
+// 5. Conditionals use: condition ( then ) /E ( else ) syntax
+// 6. Loop counter accessed with /i (outer) and /j (nested)
+// 7. Array operations use: array index ? (read) and array index ?! (write)
+// 8. /K reads keyboard input, /z checks zero flag
+// 9. /W continues while loop if top of stack is true
+//
+// To adapt for actual hardware:
+// - Replace /O and /I with actual GPIO bit-banging
+// - Adjust delay multiplier in function D for your MCU speed
+// - May need to implement actual SPI protocol if available
+// ---------------------------------------------------------------
+```
 
